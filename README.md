@@ -1,16 +1,56 @@
-# updatedctrla
-Privacy policy for chrome extension
+# CTRL-A — Smart Select for Articles
 
-Smart Ctrl A does not collect, store, or transmit any personal information or user data.
+Select only the actual article on a page — not the nav, sidebars, comments, or ads.
+CTRL-A is a Manifest V3 Chrome extension that finds the main content on a webpage and selects it in one shot. Copy clean text, export to Markdown, be able to paste easier, etc.
 
-The extension operates entirely on your local device.
 
-It does not track your browsing history.
+How It Works
 
-It does not access or transmit any data to external servers.
+On demand, a content script runs when you trigger the extension.
+The script parses the DOM and extracts the main article (Readability-style).
+CTRL-A highlights the detected article region and creates a clean, linearized text version.
+You can copy the cleaned content or export as Markdown.
+Nothing leaves your browser; settings are stored with chrome.storage.local
 
-It does not collect analytics or usage statistics.
+Installation:
+Link to chrome extension: https://chromewebstore.google.com/detail/smart-ctrl-a/jbfkjhlmfipgbadckhkjoeehcnjkkcjl?authuser=0&hl=en
+Ctrl+Shift+U — Smart-select the main article content.
+Alt+Shift+W — Sentence/paragraph select (selects text your cursor is hovering over)
 
-If you have any questions about this privacy policy, you may contact us via the Chrome Web Store developer page.
+Development (example layout):
+extension/
+├─ manifest.json
+├─ background.js            # MV3 service worker
+├─ content.js               # on-demand DOM extraction & selection
+├─ popup.html
+├─ popup.js
+├─ styles.css
+├─ vendor/
+│  └─ readability.js
+└─ img/
+   ├─ icon128.png
+   └─ screenshot-ctrl-a.png
 
-Effective date: 07/24/2025
+Optional scripts:
+npm i
+npm run dev     # watch/build (if bundling)
+npm run lint    # code style
+npm run format  # prettier
+
+
+Notes:
+Uses Manifest V3 service worker (no persistent background page).
+Content scripts run only when you invoke the extension or a command.
+
+Troubleshooting:
+Nothing is selected.
+Some pages aren’t article-like (homepages, dashboards). Try Selection-only mode or right-click → Select Article on a specific element.
+
+Hotkeys don’t work.
+Assign them at chrome://extensions/shortcuts and avoid conflicts with system/global shortcuts.
+
+Weird selection on dynamic sites.
+Pages that hydrate late can shift content. Trigger CTRL-A after the page settles or reload and try again.
+
+Doesn’t work on PDFs / Chrome pages.
+Chrome internal pages and PDFs are restricted. Save as HTML or open the source article page.
